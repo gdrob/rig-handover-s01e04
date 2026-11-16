@@ -1,8 +1,9 @@
 ---
 plan: morning-digest
-status: ready
+status: done
 owner: rook
 opened: 2026-10-29
+closed: 2026-11-16
 ---
 
 # Morning digest
@@ -77,3 +78,32 @@ page again with `LANE_MARKER` unset (the banner reads "no marker set") and uploa
 link. Move this plan to `docs/plans/done/` with its issue list.
 
 Done when: the preview link no longer shows the lane marker.
+
+
+## Issues and worker evidence
+
+The reviewer confirmed that the preview had been seen. After separate human approval, the
+page was exported with LANE_MARKER unset and replaced at the same public URL. A fresh HTTP
+fetch and browser check confirmed `no marker set`, no lane marker, and all five sample jobs.
+The export source explicitly unsets the marker for subsequent builds.
+
+Public review copy: https://rig-handover-s01e04-gdrob.huuuge-games-5824.chatgpt.site
+
+The first review attempt was refused because #7 was closed before the reviewer looked.
+We reopened it, resubmitted the same URL, and waited for explicit review confirmation before
+closing #7 and requesting cleanup approval.
+
+| # | Issue | Blocked by | Worker | Commit | State |
+|---|-------|------------|--------|--------|-------|
+| [1](https://github.com/gdrob/rig-handover-s01e04/issues/1) | Define digest contract | — | Codex · inherited parent model · inherited | 86e39c3 | closed |
+| [2](https://github.com/gdrob/rig-handover-s01e04/issues/2) | Read nightly logs | #1 | Codex · gpt-6-astra · high | 412de39 | closed |
+| [3](https://github.com/gdrob/rig-handover-s01e04/issues/3) | Render digest page | #1 | Codex · gpt-6-luna · medium | 9a9c376 | closed |
+| [4](https://github.com/gdrob/rig-handover-s01e04/issues/4) | Add digest JSON endpoint | #1 | Codex · gpt-6-luna · medium | 858a749 | closed |
+| [5](https://github.com/gdrob/rig-handover-s01e04/issues/5) | Link nights from board | #1; completion needs #2, #3 | Codex · gpt-6-luna · medium | 0d1baf2 | closed |
+| [6](https://github.com/gdrob/rig-handover-s01e04/issues/6) | Test digest routes | #1; completion needs #2–#4 | Codex · gpt-6-luna · medium | 269c3db | closed |
+| [7](https://github.com/gdrob/rig-handover-s01e04/issues/7) | Publish review preview | #2–#6; publication approval | Codex · inherited parent model · inherited | 23d14ca | closed |
+| [8](https://github.com/gdrob/rig-handover-s01e04/issues/8) | Remove marker and archive plan | #7; review; separate replacement approval | Codex · inherited parent model · inherited | d42af86 (Sites export); e9034ae (archive draft) | closed |
+
+Validation before review: 20 tests and type checking passed; both fixture nights render and
+HTML/JSON job order agrees. The published preview matches the command export. Preview HTML,
+marker values, and environment files are not in this repository.
