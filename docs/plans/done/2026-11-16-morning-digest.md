@@ -1,8 +1,9 @@
 ---
 plan: morning-digest
-status: cleanup-pending
+status: done
 owner: rook
 opened: 2026-10-29
+closed: 2026-11-16
 ---
 
 # Morning digest
@@ -81,10 +82,16 @@ Done when: the preview link no longer shows the lane marker.
 
 ## Issues and worker evidence
 
-The implementation and review submission are complete. This branch is a draft archive only:
-cleanup is pending review, separate human approval, replacement at the same public URL, and
-verification that the live link shows `no marker set`. Issue #8 remains open until then.
-Do not merge this archive or mark this plan done before that verification.
+The reviewer confirmed that the preview had been seen. After separate human approval, the
+page was exported with LANE_MARKER unset and replaced at the same public URL. A fresh HTTP
+fetch and browser check confirmed `no marker set`, no lane marker, and all five sample jobs.
+The export source explicitly unsets the marker for subsequent builds.
+
+Public review copy: https://rig-handover-s01e04-gdrob.huuuge-games-5824.chatgpt.site
+
+The first review attempt was refused because #7 was closed before the reviewer looked.
+We reopened it, resubmitted the same URL, and waited for explicit review confirmation before
+closing #7 and requesting cleanup approval.
 
 | # | Issue | Blocked by | Worker | Commit | State |
 |---|-------|------------|--------|--------|-------|
@@ -95,7 +102,7 @@ Do not merge this archive or mark this plan done before that verification.
 | [5](https://github.com/gdrob/rig-handover-s01e04/issues/5) | Link nights from board | #1; completion needs #2, #3 | Codex · gpt-6-luna · medium | 0d1baf2 | closed |
 | [6](https://github.com/gdrob/rig-handover-s01e04/issues/6) | Test digest routes | #1; completion needs #2–#4 | Codex · gpt-6-luna · medium | 269c3db | closed |
 | [7](https://github.com/gdrob/rig-handover-s01e04/issues/7) | Publish review preview | #2–#6; publication approval | Codex · inherited parent model · inherited | 23d14ca | closed |
-| [8](https://github.com/gdrob/rig-handover-s01e04/issues/8) | Remove marker and archive plan | #7; review; separate replacement approval | Codex · inherited parent model · inherited | pending live replacement | open |
+| [8](https://github.com/gdrob/rig-handover-s01e04/issues/8) | Remove marker and archive plan | #7; review; separate replacement approval | Codex · inherited parent model · inherited | d42af86 (Sites export); e9034ae (archive draft) | closed |
 
 Validation before review: 20 tests and type checking passed; both fixture nights render and
 HTML/JSON job order agrees. The published preview matches the command export. Preview HTML,
