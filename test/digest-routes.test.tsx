@@ -24,6 +24,11 @@ async function writeNight(runsDir: string, night: string, contents: string) {
   await writeFile(join(runsDir, `${night}.jsonl`), contents, 'utf8');
 }
 
+function rowForJob(html: string, job: string) {
+  const rows = html.match(/<tr\b[^>]*>[\s\S]*?<\/tr>/g) ?? [];
+  return rows.find((row) => row.includes(job));
+}
+
 afterEach(async () => {
   await Promise.all(tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
 });
@@ -79,6 +84,38 @@ describe('digest routes', () => {
     expect(html).toContain('2026-10-28T02:10:00-04:00');
     expect(html).toContain('&lt;script&gt;');
     expect(html).not.toContain('<script>alert');
+  });
+
+  it('keeps warnings for three retries or any failure, but not two retries alone', async () => {
+    const runsDir = await createRunsDir();
+    await writeNight(
+      runsDir,
+      '2026-10-31',
+      [
+        JSON.stringify({ at: '2026-10-31T01:00:00+01:00', job: 'three-retries', status: 'retry', owner: 'Ari' }),
+        JSON.stringify({ at: '2026-10-31T01:01:00+01:00', job: 'three-retries', status: 'retry', owner: 'Ari' }),
+        JSON.stringify({ at: '2026-10-31T01:02:00+01:00', job: 'three-retries', status: 'retry', owner: 'Ari' }),
+        JSON.stringify({ at: '2026-10-31T01:03:00+01:00', job: 'three-retries', status: 'ok', owner: 'Ari' }),
+        JSON.stringify({ at: '2026-10-31T02:00:00+01:00', job: 'failed-then-ok', status: 'fail', owner: 'Bea', error: 'transient' }),
+        JSON.stringify({ at: '2026-10-31T02:01:00+01:00', job: 'failed-then-ok', status: 'ok', owner: 'Bea' }),
+        JSON.stringify({ at: '2026-10-31T03:00:00+01:00', job: 'two-retries', status: 'retry', owner: 'Cal' }),
+        JSON.stringify({ at: '2026-10-31T03:01:00+01:00', job: 'two-retries', status: 'retry', owner: 'Cal' }),
+        JSON.stringify({ at: '2026-10-31T03:02:00+01:00', job: 'two-retries', status: 'ok', owner: 'Cal' }),
+      ].join('\n'),
+    );
+    const response = await createApp({ ...config, runsDir }).request('/digest/2026-10-31');
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    const retriesRow = rowForJob(html, 'three-retries');
+    const failureRow = rowForJob(html, 'failed-then-ok');
+    const ordinaryRow = rowForJob(html, 'two-retries');
+    expect(retriesRow).toBeDefined();
+    expect(retriesRow).toContain('class="warn"');
+    expect(failureRow).toBeDefined();
+    expect(failureRow).toContain('class="warn"');
+    expect(ordinaryRow).toBeDefined();
+    expect(ordinaryRow).not.toContain('class="warn"');
   });
 
   it('returns 404 for a missing night on both routes', async () => {
