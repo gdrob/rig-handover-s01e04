@@ -1,6 +1,6 @@
 ---
 plan: morning-digest
-status: ready
+status: cleanup-pending
 owner: rook
 opened: 2026-10-29
 ---
@@ -77,3 +77,26 @@ page again with `LANE_MARKER` unset (the banner reads "no marker set") and uploa
 link. Move this plan to `docs/plans/done/` with its issue list.
 
 Done when: the preview link no longer shows the lane marker.
+
+
+## Issues and worker evidence
+
+The implementation and review submission are complete. This branch is a draft archive only:
+cleanup is pending review, separate human approval, replacement at the same public URL, and
+verification that the live link shows `no marker set`. Issue #8 remains open until then.
+Do not merge this archive or mark this plan done before that verification.
+
+| # | Issue | Blocked by | Worker | Commit | State |
+|---|-------|------------|--------|--------|-------|
+| [1](https://github.com/gdrob/rig-handover-s01e04/issues/1) | Define digest contract | — | Codex · inherited parent model · inherited | 86e39c3 | closed |
+| [2](https://github.com/gdrob/rig-handover-s01e04/issues/2) | Read nightly logs | #1 | Codex · gpt-6-astra · high | 412de39 | closed |
+| [3](https://github.com/gdrob/rig-handover-s01e04/issues/3) | Render digest page | #1 | Codex · gpt-6-luna · medium | 9a9c376 | closed |
+| [4](https://github.com/gdrob/rig-handover-s01e04/issues/4) | Add digest JSON endpoint | #1 | Codex · gpt-6-luna · medium | 858a749 | closed |
+| [5](https://github.com/gdrob/rig-handover-s01e04/issues/5) | Link nights from board | #1; completion needs #2, #3 | Codex · gpt-6-luna · medium | 0d1baf2 | closed |
+| [6](https://github.com/gdrob/rig-handover-s01e04/issues/6) | Test digest routes | #1; completion needs #2–#4 | Codex · gpt-6-luna · medium | 269c3db | closed |
+| [7](https://github.com/gdrob/rig-handover-s01e04/issues/7) | Publish review preview | #2–#6; publication approval | Codex · inherited parent model · inherited | 23d14ca | closed |
+| [8](https://github.com/gdrob/rig-handover-s01e04/issues/8) | Remove marker and archive plan | #7; review; separate replacement approval | Codex · inherited parent model · inherited | pending live replacement | open |
+
+Validation before review: 20 tests and type checking passed; both fixture nights render and
+HTML/JSON job order agrees. The published preview matches the command export. Preview HTML,
+marker values, and environment files are not in this repository.
